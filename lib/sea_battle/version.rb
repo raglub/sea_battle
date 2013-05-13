@@ -1,3 +1,3 @@
-module SeaBattle
-  VERSION = "0.0.0"
+class SeaBattle
+  VERSION = "0.0.1"
 end
