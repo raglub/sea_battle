@@ -1,5 +1,6 @@
 require "sea_battle/version"
+require "sea_battle/board"
 
-module SeaBattle
-  # Your code goes here...
+class SeaBattle
+
 end
