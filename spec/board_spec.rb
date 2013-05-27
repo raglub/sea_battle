@@ -25,7 +25,7 @@ describe SeaBattle::Board do
     end
 
     it "for horizontal ship" do
-      board = "0"*100
+      board = "1"*100
       board[2] = "2"
       board[3] = "2"
       klass.new(board).ship_positions(0, 2).should eq([[0, 2], [0, 3]])
