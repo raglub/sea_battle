@@ -16,6 +16,10 @@ class SeaBattle
       @status = status
     end
 
+    def add_ship
+      @status += 2 unless is_in_ship?
+    end
+
     def attack
       @status += 4 unless is_attacked?
     end
