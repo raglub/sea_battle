@@ -39,4 +39,18 @@ describe SeaBattle::Board do
     end
 
   end
+
+  context "should add new ship in random position" do
+
+    let(:board) { klass.new }
+
+    it "of length 1" do
+      Random.stub(:rand) { 2 }
+
+      board.add_random_ship(1)
+
+      board.ship_positions(2, 2).should eq([2, 2])
+    end
+
+  end
 end
