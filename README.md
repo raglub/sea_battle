@@ -18,7 +18,16 @@ Or install it yourself as:
 
 ## Usage
 
+Initialize board of the game
+
     $ require "sea_battle"
 
     $ board = SeaBattle::Board.new.board
     $ board[0][3].is_attacked?
+
+Add random ship on the board
+
+    $ require "random_ship"
+    ...
+
+    SeaBattle::RandomBoard.new(board, 3).add
