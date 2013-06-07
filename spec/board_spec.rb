@@ -45,8 +45,7 @@ describe SeaBattle::Board do
     let(:board) { klass.new }
 
     it "of length 1" do
-      Random.stub(:rand) { 2 }
-
+      Random.stub(:rand) { 0 }
       board.add_random_ship(1)
 
       board.ship_positions(2, 2).should eq([2, 2])
