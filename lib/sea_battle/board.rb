@@ -20,6 +20,14 @@ class SeaBattle
       check_board
     end
 
+    # Set ships on the board (random positions)
+    def random_ships
+      [1, 1, 1, 1, 2, 2, 2, 3, 3, 4].each do |length|
+        RandomShip.new(self, length).add_ship
+      end
+    end
+
+    # Return array of position ship if it will be on position [row, column]
     def ship_positions(row, column)
       horizontal = horizontal_ship_position(row, column)
       vertical = vertical_ship_position(row, column)
