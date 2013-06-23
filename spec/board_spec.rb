@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 require "sea_battle"
-
 describe SeaBattle::Board do
 
   let(:klass) { SeaBattle::Board }
@@ -44,12 +43,13 @@ describe SeaBattle::Board do
 
     let(:board) { klass.new }
 
-    it "of length 1" do
-      Random.stub(:rand) { 0 }
-      board.add_random_ship(1)
-
-      board.ship_positions(2, 2).should eq([2, 2])
+    it "should spred randomly ships on the board" do
+      board.random_ships
+      result = 0
+      board.board.flatten.each do |cell|
+        result += 1 if cell.is_in_ship?
+      end
+      result.should eq(20)
     end
-
   end
 end

@@ -13,13 +13,13 @@ class SeaBattle
     end
 
     # Add new Ship on board
-    def add
+    def add_ship
       if Random.rand(2) == 0
-       return if add_vertical
-       return if add_horizontal
+        return if add_ship_of(:vertical)
+        return if add_ship_of(:horizontal)
       else
-       return if add_horizontal
-       return if add_vertical
+        return if add_ship_of(:horizontal)
+        return if add_ship_of(:vertical)
       end
     end
 
@@ -27,7 +27,7 @@ class SeaBattle
       result = []
 
       @length.times do |offset|
-        if direct
+        if direct.eql?(:vertical)
           result << [row + offset, column] if row + offset < @vertical
         else
           result << [row, column + offset] if column + offset < @horizontal
@@ -42,55 +42,40 @@ class SeaBattle
       first_column = column - 1
 
       last_row, last_column = row + 1, column + 1
-      if direct
-        last_row += @length - 1
-      else
-        last_column += @length - 1
-      end
+      last_row += @length - 1 if direct.eql?(:vertical)
+      last_column += @length - 1 if direct.eql?(:horizontal)
 
-      vertical_range = (first_row..last_row).to_a & (0..@vertical).to_a
-      horizontal_range = (first_column..last_column).to_a & (0..@horizontal).to_a
+      vertical_range = (first_row..last_row).to_a & (0...@vertical).to_a
+      horizontal_range = (first_column..last_column).to_a & (0...@horizontal).to_a
       vertical_range.product(horizontal_range)
     end
 
     def mixed_board_positions
       offset = Random.rand(@horizontal * @vertical)
-      (0...@vertical).to_a.product((0...@horizontal).to_a).rotate(offset)
+      (0...@vertical).to_a.product(
+        (0...@horizontal).to_a
+      ).rotate(offset)
     end
 
-    def add_vertical
+    def add_ship_of(direct)
       mixed_board_positions.each do |row, column|
-        if row + @length < @vertical
-          if is_area_empty?(row, column, true)
-            positions = ship_positions(row, column, true)
-            positions.map do |row, column|
-              @board[row][column].add_ship
-            end
-            return positions
-          end
-        end
-      end
-      nil
-    end
+        next if direct.eql?(:vertical) and row + @length - 1 >= @vertical
+        next if direct.eql?(:horizontal) and column + @length - 1 >= @horizontal
 
-    def add_horizontal
-      mixed_board_positions.each do |row, column|
-        if column + @length < @horizontal
-          if is_area_empty?(row, column, false)
-            positions = ship_positions(row, column, false)
-            positions.map do |row, column|
-              @board[row][column].add_ship
-            end
-            return positions
+        if is_area_empty?(row, column, direct)
+          positions = ship_positions(row, column, direct)
+          positions.map do |row, column|
+            @board[row][column].add_ship
           end
+          return positions
         end
       end
       nil
     end
 
     def is_area_empty?(row, column, direct)
-      area_ship_positions(row, column, direct).each do |row, column|
-        return false if @board[row][column].is_in_ship?
+      area_ship_positions(row, column, direct).each do |row_index, column_index|
+        return false if @board[row_index][column_index].is_in_ship?
       end
       true
     end
