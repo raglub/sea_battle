@@ -30,4 +30,4 @@ Add random ship on the board
     $ require "random_ship"
     ...
 
-    SeaBattle::RandomBoard.new(board, 3).add
+    SeaBattle::RandomBoard.new(board, 3).add_ship
