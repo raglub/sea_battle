@@ -20,6 +20,10 @@ class SeaBattle
       check_board
     end
 
+    def attack(row, column)
+      board[row][column].attack
+    end
+
     # Set ships on the board (random positions)
     def random_ships
       [1, 1, 1, 1, 2, 2, 2, 3, 3, 4].each do |length|
