@@ -31,3 +31,7 @@ Add random ship on the board
     ...
 
     SeaBattle::RandomBoard.new(board, 3).add_ship
+
+Play on console
+
+    $ sea_battle

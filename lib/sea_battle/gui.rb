@@ -49,12 +49,12 @@ class SeaBattle
         show
         get_input
         break if @value == "end"
-        @computer_board.attack(@row, @column)
+        @computer_board.attacked(@row, @column)
         system "clear"
         show
         sleep 1 + rand
 
-        @user_board.attack(rand(10), rand(10))
+        @user_board.attacked(rand(10), rand(10))
       end
     end
 
