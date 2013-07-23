@@ -7,20 +7,21 @@ class SeaBattle
   # It's Board of game Sea Battle
   class Board
 
-    attr_reader :board, :vertical, :horizontal
+    attr_reader :board, :vertical, :horizontal, :status
 
-    def initialize(board = "1" * 100)
+    def initialize(board = "1" * 100, status = :prepare)
       @board = board.split("").map do |status|
         Cell.new(status.to_i)
       end.each_slice(10).to_a
       @horizontal = 10
       @vertical = 10
 
+      @status = status
       @quantity_ships = {1 => 4, 2 => 3, 3 => 2, 4 => 1}
       check_board
     end
 
-    def attack(row, column)
+    def attacked(row, column)
       board[row][column].attack
     end
 
