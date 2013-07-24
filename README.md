@@ -35,3 +35,11 @@ Add random ship on the board
 Play on console
 
     $ sea_battle
+
+Use class SeaBattle
+
+   $ require "sea_battle"
+
+   $ first_board = SeaBattle::Board.new
+   $ second_board = SeaBattle::Board.new
+   $ SeaBattle.new(first_board, second_board)
