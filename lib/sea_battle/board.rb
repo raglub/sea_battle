@@ -35,6 +35,8 @@ class SeaBattle
 
     # Set ships on the board (random positions)
     def random_ships
+      return unless @status == :initialized
+      reset_board
       [1, 1, 1, 1, 2, 2, 2, 3, 3, 4].each do |length|
         RandomShip.new(self, length).add_ship
       end
@@ -68,6 +70,14 @@ class SeaBattle
         end
       end
       result
+    end
+
+    def reset_board
+      board.each do |line|
+        line.each do |cell|
+          cell.reset_cell
+        end
+      end
     end
 
     # it should return array of ship position

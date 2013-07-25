@@ -44,5 +44,8 @@ class SeaBattle
       @status & 8 == 8
     end
 
+    def reset_cell
+      @status = 1
+    end
   end
 end
