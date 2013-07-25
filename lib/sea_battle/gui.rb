@@ -2,6 +2,7 @@
 
 require_relative "cell"
 require_relative "board"
+require_relative "version"
 
 class SeaBattle
   # User can play with computer on console
@@ -9,9 +10,22 @@ class SeaBattle
 
     def initialize
       @user_board = ::SeaBattle::Board.new
-      @user_board.random_ships
       @computer_board = ::SeaBattle::Board.new
       @computer_board.random_ships
+      @computer_board.activated_board
+      @exit = false
+      @keyboard = {
+        exit: false,
+        activate: false,
+        position: nil
+      }
+      puts ""
+      puts "#{' '*10}SEA BATTLE ver#{VERSION}"
+    end
+
+    def random_ships_for_user
+      @user_board.random_ships
+      @user_board.activated_board
     end
 
     def show
@@ -44,27 +58,38 @@ class SeaBattle
     end
 
     def play
-      while true
+      while true and not @keyboard[:exit]
         system "clear"
         show
         get_input
-        break if @value == "end"
-        @computer_board.attacked(@row, @column)
-        system "clear"
-        show
-        sleep 1 + rand
+        if @keyboard[:position]
+          @computer_board.attack(@row, @column)
+          system "clear"
+          show
+          sleep 1 + rand
 
-        @user_board.attacked(rand(10), rand(10))
+          @user_board.attack(rand(10), rand(10))
+          @keyboard[:position] = false
+        end
       end
     end
 
     def get_input
       puts ""
-      puts "Put your position into attack"
-      @value = gets.chomp
-      @row, @column = @value.split("")
-      @column = @column.ord - 97
-      @row = @row.to_i
+      puts "(r)andom your ships on board"
+      puts "4a, ... - select part of ship"
+      puts "(a)ctivate your game if all ships are at properly place"
+      puts "(e)xit of game"
+      keyboard = gets.chomp
+      @keyboard[:exit] = true if keyboard == "e"
+      if not @keyboard[:exit] and @keyboard[:activate]
+        @keyboard[:position] = true
+        @row, @column = keyboard.split("")
+        @column = @column.ord - 97
+        @row = @row.to_i
+      end
+      @keyboard[:activate] = true if keyboard == "a"
+      @user_board.random_ships if keyboard == "r"
     end
 
   end
