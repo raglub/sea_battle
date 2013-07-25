@@ -64,6 +64,7 @@ describe SeaBattle do
   end
 
   context "for active game and first player correctly attacked competition ship then" do
+
     let(:board_zero) { board.new(first_raw_board, :activated) }
     let(:board_one) { board.new(first_raw_board, :activated) }
     let(:sea_battle) { SeaBattle.new(board_zero, board_one, "first_player;1;1") }
