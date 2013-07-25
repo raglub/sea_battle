@@ -42,9 +42,9 @@ class SeaBattle
       return false unless active_user == player
       return false unless first_status.eql?(:activated) and second_status.eql?(:activated)
       if player == :first_player
-        @first_board.attack(row, column)
-      else
         @second_board.attack(row, column)
+      else
+        @first_board.attack(row, column)
       end
       @last_attack_move = [player, row, column]
     else
