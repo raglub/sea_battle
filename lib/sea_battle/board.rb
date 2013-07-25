@@ -9,7 +9,7 @@ class SeaBattle
 
     attr_reader :board, :vertical, :horizontal, :status
 
-    def initialize(board = "1" * 100, status = :prepare)
+    def initialize(board = "1" * 100, status = :initialized)
       @board = board.split("").map do |status|
         Cell.new(status.to_i)
       end.each_slice(10).to_a
@@ -21,7 +21,11 @@ class SeaBattle
       check_board
     end
 
-    def attacked(row, column)
+    def activated_board
+      @status = :activated
+    end
+
+    def attack(row, column)
       board[row][column].attack
     end
 
