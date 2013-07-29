@@ -11,6 +11,7 @@ class SeaBattle
     # 2 -> field is part of ship
     # 4 -> attacked field
     # 8 -> is only selected by user
+    #16 -> is sunk
     # 6 -> attacked field and exsist ship
     def initialize(status = 1)
       @status = status
@@ -22,6 +23,10 @@ class SeaBattle
 
     def attack
       @status += 4 unless is_attacked?
+    end
+
+    def sunk
+      @status += 16 unless is_sunk?
     end
 
     def switch_select
@@ -42,6 +47,10 @@ class SeaBattle
 
     def is_selected?
       @status & 8 == 8
+    end
+
+    def is_sunk?
+      @status & 16 == 16
     end
 
     def reset_cell

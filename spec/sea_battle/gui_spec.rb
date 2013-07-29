@@ -35,7 +35,7 @@ describe SeaBattle::GUI do
     gui.stub(:gets).and_return("r", "e")
     reset_content
     gui.play
-    content.should include("◯")
+    content.should include("□")
   end
 
   it "should let user attacked field 2b" do

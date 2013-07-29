@@ -19,18 +19,25 @@ class SeaBattle
 
     def play
       while true and not @keyboard[:exit]
-        system "clear"
-        show_boards
-        get_input
+        update_screen
+        user_command
         if @keyboard[:position]
           @sea_battle.move(:first_player, :attack, @row, @column)
-          system "clear"
-          show_boards
+          push_message("You moved on position (#{@row}, #{@column})")
+          push_message("User sunked ship of computer") if @computer_board.is_sunken_ship?(@row, @column)
+          if @sea_battle.winner_is == :first_player
+            push_message("GAME OVER win User") if @sea_battle.winner_is == :first_player
+            break
+          end
+          update_screen
           while @sea_battle.active_user == :second_player
             sleep 1 + rand
-            @sea_battle.move(:second_player, :attack, rand(10), rand(10))
-            system "clear"
-            show_boards
+            row, column = @computer_board.random_position
+            @sea_battle.move(:second_player, :attack, row, column)
+            push_message("Computer moved on position (#{row}, #{column})")
+            push_message("Computer sunked ship of user") if @user_board.is_sunken_ship?(row, column)
+            push_message("GAME OVER win Computer") if @sea_battle.winner_is == :second_player
+            update_screen
           end
           @keyboard[:position] = false
         end
@@ -47,35 +54,47 @@ class SeaBattle
       }
     end
 
-    def show_boards
+    def update_screen
+      system "clear"
       show_title
 
       puts ""
-      puts "     A   B   C   D   E   F   G   H   I   J           A   B   C   D   E   F   G   H   I   J"
+      puts "     A   B   C   D   E   F   G   H   I   J         A   B   C   D   E   F   G   H   I   J"
       @user_board.board.each_with_index do |line, index|
         user_line = line.map do |cell|
           if cell.is_attacked? and cell.is_in_ship?
-            " ⬤ "
+            unless cell.is_sunk?
+              " ■ "
+            else
+              " ⬤/"
+            end
           elsif cell.is_attacked? and not cell.is_in_ship?
             " • "
           elsif not cell.is_attacked? and cell.is_in_ship?
-            " ◯ "
+            " □ "
           else
-            "   "
+             "   "
           end
         end.join("│")
         computer_line = @computer_board.board[index].map do |cell|
           if cell.is_attacked? and cell.is_in_ship?
-            " ⬤ "
+            unless cell.is_sunk?
+              " ■ "
+            else
+              " ⬤/"
+            end
           elsif cell.is_attacked? and not cell.is_in_ship?
             " • "
           else
             "   "
           end
         end.join("│")
-        puts "   ┼───┼───┼───┼───┼───┼───┼───┼───┼───┼───┼       ┼───┼───┼───┼───┼───┼───┼───┼───┼───┼───┼"
-        puts "#{index}  │#{user_line}│    #{index}  │#{computer_line}│"
+        puts "   ┼───┼───┼───┼───┼───┼───┼───┼───┼───┼───┼     ┼───┼───┼───┼───┼───┼───┼───┼───┼───┼───┼"
+        puts " #{index} │#{user_line}│   #{index} │#{computer_line}│"
       end
+      puts "   ┼───┼───┼───┼───┼───┼───┼───┼───┼───┼───┼     ┼───┼───┼───┼───┼───┼───┼───┼───┼───┼───┼"
+      puts ""
+      show_messages
     end
 
     def show_title
@@ -83,9 +102,9 @@ class SeaBattle
       puts "#{' '*10}SEA BATTLE ver#{VERSION}"
     end
 
-    def get_input
+    def user_command
       puts ""
-      puts "4a, ... - select part of ship"
+      puts "4a, 8i, ... - select part of ship"
       unless @keyboard[:activate]
         puts "(r)andom your ships on board"
         puts "(a)ctivate your game if all ships are at properly place"
@@ -100,12 +119,22 @@ class SeaBattle
         @row = @row.to_i
       end
       if keyboard == "a"
-
         @keyboard[:activate] = true
         @user_board.activated_board
-
+        push_message("  Activated game")
       end
       @user_board.random_ships if keyboard == "r"
+    end
+
+    def push_message(message)
+      @messages ||= []
+      @messages = @messages.rotate(1)
+      @messages[3] = "# #{message}"
+    end
+
+    def show_messages
+      @messages ||= []
+      puts @messages.compact.join("\n")
     end
 
   end
