@@ -29,6 +29,7 @@ describe SeaBattle do
     "1111122112" +
     "1211111112"
   }
+
   it "should properly initialize class" do
     expect { SeaBattle.new(board.new, board.new) }.to_not raise_error
   end
@@ -64,7 +65,6 @@ describe SeaBattle do
   end
 
   context "for active game and first player correctly attacked competition ship then" do
-
     let(:board_zero) { board.new(first_raw_board, :activated) }
     let(:board_one) { board.new(first_raw_board, :activated) }
     let(:sea_battle) { SeaBattle.new(board_zero, board_one, "first_player;1;1") }
@@ -81,6 +81,27 @@ describe SeaBattle do
 
     it "should get first_player" do
       sea_battle.active_user.should eql(:first_player)
+    end
+
+  end
+
+  context "for method winer_is" do
+    let(:first_board) { board.new(first_raw_board, :activated) }
+    let(:second_board) { board.new(first_raw_board, :activated) }
+    let(:sea_battle) { SeaBattle.new(first_board, second_board, nil) }
+
+    it "should return nil if no one win of game" do
+      sea_battle.winner_is.should be_nil
+    end
+
+    it "should return :first_player if first player win of game" do
+      first_board.stub(:status) { :finished }
+      sea_battle.winner_is.should eq(:first_player)
+    end
+
+    it "should return :second_player if second player win of game" do
+      second_board.stub(:status) { :finished }
+      sea_battle.winner_is.should eq(:second_player)
     end
 
   end

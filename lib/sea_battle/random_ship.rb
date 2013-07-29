@@ -1,9 +1,11 @@
 # encoding: utf-8
 
+require_relative "support"
 
 class SeaBattle
   # It's random positions for new ship
   class RandomShip
+    include ::SeaBattle::Support
 
     def initialize(board, length = 1)
       @board = board.board
@@ -48,13 +50,6 @@ class SeaBattle
       vertical_range = (first_row..last_row).to_a & (0...@vertical).to_a
       horizontal_range = (first_column..last_column).to_a & (0...@horizontal).to_a
       vertical_range.product(horizontal_range)
-    end
-
-    def mixed_board_positions
-      offset = Random.rand(@horizontal * @vertical)
-      (0...@vertical).to_a.product(
-        (0...@horizontal).to_a
-      ).rotate(offset)
     end
 
     def add_ship_of(direct)
