@@ -2,10 +2,12 @@
 
 require_relative "cell"
 require_relative "random_ship"
+require_relative "support"
 
 class SeaBattle
   # It's Board of game Sea Battle
   class Board
+    include ::SeaBattle::Support
 
     attr_reader :board, :vertical, :horizontal, :status
 
@@ -17,7 +19,6 @@ class SeaBattle
       @vertical = 10
 
       @status = status
-      @quantity_ships = {1 => 4, 2 => 3, 3 => 2, 4 => 1}
       check_board
     end
 
@@ -26,11 +27,44 @@ class SeaBattle
     end
 
     def attack(row, column)
-      board[row][column].attack
+      if @status == :activated
+        board[row][column].attack
+        is_sunken_ship?(row, column)
+        is_finished?
+      end
+    end
+
+    def is_attacked?(row, column)
+      board[row][column].is_attacked?
     end
 
     def is_in_ship?(row, column)
       board[row][column].is_in_ship?
+    end
+
+    # Return true if on position (row, column) is the ship which is sunked
+    # Return false if on position (row, column) is not the ship which is sunked
+    # or don't exist the ship
+    def is_sunken_ship?(row, column)
+      positions = ship_positions(row, column)
+      return false if positions.empty?
+      is_sunk = true
+      positions.each do |position_row, position_column|
+        is_sunk = false unless board[position_row][position_column].is_attacked?
+      end
+      if is_sunk
+        positions.each do |position_row, position_column|
+          board[position_row][position_column].sunk
+        end
+      end
+      is_sunk
+    end
+
+    # Return position to attack (have not attacked)
+    def random_position
+      mixed_board_positions.each do |row, column|
+        return [row, column] unless is_attacked?(row, column)
+      end
     end
 
     # Set ships on the board (random positions)
@@ -55,6 +89,17 @@ class SeaBattle
     # It should raise error when @board isn't Array
     def check_board
       raise "The board is not Array class" unless @board.size == 10
+    end
+
+    def is_finished?
+      is_finished = true
+      board.each do |line|
+        line.each do |cell|
+          is_finished = false if cell.is_in_ship? and not cell.is_sunk?
+        end
+      end
+      @status = :finished if is_finished
+      is_finished
     end
 
     # it should return array of ship position

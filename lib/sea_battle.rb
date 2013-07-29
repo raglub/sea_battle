@@ -34,6 +34,8 @@ class SeaBattle
   end
 
   def move(player, type, row, column)
+    return false unless winner_is.nil?
+
     return false unless [:first_player, :second_player].include?(player)
     return false unless [:choose, :attack, :mark].include?(type)
 
@@ -50,6 +52,12 @@ class SeaBattle
     else
     end
     true
+  end
+
+  def winner_is
+    return :first_player if first_status.eql? :finished
+    return :second_player if second_status.eql? :finished
+    nil
   end
 
   private
