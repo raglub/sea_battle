@@ -28,6 +28,18 @@ class SeaBattle
     end
   end
 
+  def is_activated?
+    not first_status.eql?(:initialized) and not second_status.eql?(:initialized)
+  end
+
+  def is_sunken_ship?(row, column, player)
+    if player == :first_player
+      @second_board.is_sunken_ship?(row, column)
+    else
+      @first_board.is_sunken_ship?(row, column)
+    end
+  end
+
   def last_attack_move
     return if @last_attack_move.nil?
     @last_attack_move.join(";")
@@ -55,8 +67,8 @@ class SeaBattle
   end
 
   def winner_is
-    return :first_player if first_status.eql? :finished
-    return :second_player if second_status.eql? :finished
+    return :second_player if first_status.eql? :finished
+    return :first_player if second_status.eql? :finished
     nil
   end
 
