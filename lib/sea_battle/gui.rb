@@ -66,20 +66,20 @@ class SeaBattle
           unless cell.is_sunk?
             " ■ "
           else
-            " ⬤ "
+            " ※ "
           end
         elsif cell.is_attacked? and not cell.is_in_ship?
           " • "
         elsif not cell.is_attacked? and cell.is_in_ship? and player == :first_player
           " □ "
         else
-          " \u205f "
+          "   "
         end
       end.join("│")
     end
 
     def info_command
-      puts "⬤/ - sunk ship; ■ - hit ship; □ - selected ship; • - mishit"
+      puts "※ - sunk ship; ■ - hit ship; □ - selected ship; • - mishit"
       puts ""
       unless @sea_battle.is_activated?
         puts "(r)andom your ships on board"
