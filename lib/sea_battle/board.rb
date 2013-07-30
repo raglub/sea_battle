@@ -12,18 +12,24 @@ class SeaBattle
     attr_reader :board, :vertical, :horizontal, :status
 
     def initialize(board = "1" * 100, status = :initialized)
-      @board = board.split("").map do |status|
-        Cell.new(status.to_i)
-      end.each_slice(10).to_a
-      @horizontal = 10
-      @vertical = 10
+      @horizontal, @vertical = 10, 10
+
+      load_board(board)
 
       @status = status
       check_board
     end
 
-    def activated_board
+    # When all ships are on board then board can be activated
+    # Return true when board was activated
+    def activate_board
+      result = 0
+      @board.flatten.each do |cell|
+        result += 1 if cell.is_in_ship?
+      end
+      return false unless result == 20
       @status = :activated
+      true
     end
 
     def attack(row, column)
@@ -115,6 +121,12 @@ class SeaBattle
         end
       end
       result
+    end
+
+    def load_board(board)
+      @board = board.split("").map do |status|
+        Cell.new(status.to_i)
+      end.each_slice(10).to_a
     end
 
     def reset_board

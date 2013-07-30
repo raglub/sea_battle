@@ -96,12 +96,12 @@ describe SeaBattle do
 
     it "should return :first_player if first player win of game" do
       first_board.stub(:status) { :finished }
-      sea_battle.winner_is.should eq(:first_player)
+      sea_battle.winner_is.should eq(:second_player)
     end
 
     it "should return :second_player if second player win of game" do
       second_board.stub(:status) { :finished }
-      sea_battle.winner_is.should eq(:second_player)
+      sea_battle.winner_is.should eq(:first_player)
     end
 
   end

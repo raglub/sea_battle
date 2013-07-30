@@ -29,6 +29,16 @@ describe SeaBattle::Board do
     expect { SeaBattle::Board.new("") }.to raise_error
   end
 
+  context "should check method #activate_board" do
+    it "for empty board" do
+      SeaBattle::Board.new.activate_board.should be_false
+    end
+
+    it "for properly arranged ships on board" do
+      SeaBattle::Board.new(raw_board).activate_board.should be_true
+    end
+  end
+
   context "should check method ship_positions"do
 
     it "for non-ship" do
@@ -62,7 +72,7 @@ describe SeaBattle::Board do
   context "should check method attack"do
 
     it "for non-ship" do
-      board.activated_board
+      board.activate_board
       board.attack(0, 8)
       board.board[0][8].is_sunk?.should be_false
       board.attack(1, 8)
@@ -82,7 +92,7 @@ describe SeaBattle::Board do
     let(:board) { SeaBattle::Board.new(active_board) }
 
     it "for simply type" do
-      board.activated_board
+      board.activate_board
       Random.stub(:rand) { 12 }
       board.random_position.should eql([1, 3])
     end
